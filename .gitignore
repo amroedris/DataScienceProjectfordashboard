@@ -174,3 +174,4 @@ cython_debug/
 .pypirc
 Data Science Project/.idea/workspace.xml
 .DS_Store
+*.xml
