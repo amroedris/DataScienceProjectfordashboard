@@ -2,7 +2,6 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-from plotly.express import density_heatmap
 
 # Load data
 data = pd.read_csv("data_morad_elshorbagy.csv")
