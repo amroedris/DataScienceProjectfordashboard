@@ -10,19 +10,19 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
 # Load Data
-url = r"master-6.csv"
+url = r"addiction after scaling and imputation.csv"
 data = pd.read_csv(url)
 
 # Select features and target
 features = [
-    'Daily Social Media Usage(hours)',
-    'Number of Social Media Platforms',
-    'Frequency of Posts',
-    'Frequency of Checking Notifications',
-    'Self Reported Addiction Score',
-    'Social Media Fatigue Score'
+    'daily_screen_time',
+    'app_sessions',
+    'social_media_usage',
+    'gaming_time',
+    'night_usage',
+    'stress_level'
 ]
-target = 'Mental Health Status'
+target = 'addicted'
 
 # Drop missing values
 data_clean = data[features + [target]].dropna()
