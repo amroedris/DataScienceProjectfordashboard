@@ -17,7 +17,7 @@ if dataset_option == "Dataset 1: master-6.csv":
     dataset_type = "structured survey with mental health + behavioral indicators"
     show_dataset = "Dataset 1"
 else:
-    data = pd.read_csv("../addiction after scaling and imputation.csv")
+    data = pd.read_csv("../addiction after imputation.csv")
     dataset_name = "addiction.csv"
     dataset_type = "addiction-focused behavioral data"
     show_dataset = "Dataset 2"
