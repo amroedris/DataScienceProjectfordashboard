@@ -12,12 +12,12 @@ dataset_option = st.sidebar.selectbox("Choose a dataset:", ["Dataset 1: master-5
 
 if dataset_option == "Dataset 1: master-5.csv":
     # Load data
-    data = pd.read_csv("../master-5 2.csv")
+    data = pd.read_csv("master-5 2.csv")
     dataset_name = "master-5.csv"
     dataset_type = "structured survey with mental health + behavioral indicators"
     show_dataset = "Dataset 1"
 else:
-    data = pd.read_csv("../mobile_addiction.csv")
+    data = pd.read_csv("mobile_addiction.csv")
     dataset_name = "addiction.csv"
     dataset_type = "addiction-focused behavioral data"
     show_dataset = "Dataset 2"
