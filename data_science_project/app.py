@@ -31,9 +31,9 @@ st.sidebar.title("📊 Visualization Mode")
 viz_mode = st.sidebar.radio("Select visualization type:", ["Static Visualizations", "Interactive Dashboard"])
 
 
-
+st.title("📱 Social Media & Smartphone Addiction Dashboard")
 if show_dataset == "Dataset 1":
-    st.title("📱 Social Media & Smartphone Addiction Dashboard")
+
     if viz_mode == "Static Visualizations":
         st.markdown("#### Static Plots for Dataset 1")
 
@@ -119,7 +119,7 @@ if show_dataset == "Dataset 1":
 
 
 
-        st.markdown("### 📈 Addiction Score vs Avg Mental Health Status ")
+        st.markdown("### 📈Avg Addiction Score vs  Mental Health Status ")
 
         avg_add_mental_health = data.groupby("Mental Health Status")["Self Reported Addiction Score"].mean().reset_index()
 
