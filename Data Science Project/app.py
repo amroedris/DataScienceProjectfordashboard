@@ -12,12 +12,12 @@ dataset_option = st.sidebar.selectbox("Choose a dataset:", ["Dataset 1: master-5
 
 if dataset_option == "Dataset 1: master-5.csv":
     # Load data
-    data = pd.read_csv("../master-5 2.csv")
+    data = pd.read_csv("master-5 2.csv")
     dataset_name = "master-5.csv"
     dataset_type = "structured survey with mental health + behavioral indicators"
     show_dataset = "Dataset 1"
 else:
-    data = pd.read_csv("../mobile_addiction.csv")
+    data = pd.read_csv("mobile_addiction.csv")
     dataset_name = "addiction.csv"
     dataset_type = "addiction-focused behavioral data"
     show_dataset = "Dataset 2"
@@ -31,9 +31,9 @@ st.sidebar.title("📊 Visualization Mode")
 viz_mode = st.sidebar.radio("Select visualization type:", ["Static Visualizations", "Interactive Dashboard"])
 
 
-
+st.title("📱 Social Media & Smartphone Addiction Dashboard")
 if show_dataset == "Dataset 1":
-    st.title("📱 Social Media & Smartphone Addiction Dashboard")
+
     if viz_mode == "Static Visualizations":
         st.markdown("#### Static Plots for Dataset 1")
 
@@ -119,7 +119,7 @@ if show_dataset == "Dataset 1":
 
 
 
-        st.markdown("### 📈 Addiction Score vs Avg Mental Health Status ")
+        st.markdown("### 📈Avg Addiction Score vs  Mental Health Status ")
 
         avg_add_mental_health = data.groupby("Mental Health Status")["Self Reported Addiction Score"].mean().reset_index()
 
