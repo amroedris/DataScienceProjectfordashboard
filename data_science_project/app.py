@@ -156,12 +156,13 @@ if show_dataset == "Dataset 1":
 
         st.markdown("### 📈 Platforms vs Daily Usage")
 
-        avg_usage_by_platforms = data.groupby("Number of Social Media Platforms")["Daily Social Media Usage(hours)"].mean().reset_index()
+
 
         fig7 = px.histogram(
-            avg_usage_by_platforms,
+            data,
             x="Number of Social Media Platforms",
-            y="Daily Social Media Usage(hours)"
+            y="Daily Social Media Usage(hours)",
+            histfunc="avg"
         )
 
         fig7.update_traces(marker_line_color="black", marker_line_width=1)
@@ -169,7 +170,7 @@ if show_dataset == "Dataset 1":
 
         st.plotly_chart(fig7, use_container_width=True, key="staticd1f7")
         st.info(
-            "💡 Participants who use 2-5 social media platforms tend to use their smartphone more")
+            "💡 Regardless of the number of social media platforms, the average daily usage remains around 5 hours.")
 
 
 
@@ -177,15 +178,35 @@ if show_dataset == "Dataset 1":
 
         st.markdown("### 📈 Frequency of Posts vs Daily Usage")
         avg_usage_by_posts = data.groupby("Frequency of Posts")["Daily Social Media Usage(hours)"].mean().reset_index()
-        fig8 = px.bar(avg_usage_by_posts, x="Frequency of Posts", y="Daily Social Media Usage(hours)")
+
+        fig8 = px.bar(
+            avg_usage_by_posts,
+            x="Frequency of Posts",
+            y="Daily Social Media Usage(hours)",
+            category_orders={
+                "Frequency of Posts": ["Never", "Rarely", "Sometimes", "Often", "Always"]
+            }
+        )
         st.plotly_chart(fig8, use_container_width=True, key="staticd1f8")
 
         st.info(
-            "💡 Frequency of posts doesn't have a huge affect on daily usage. ")
+            "💡 Frequency of posts doesn't have a significant affect on daily usage. ")
 
         st.markdown("### 📈 Notification Frequency vs Daily Usage")
+
         avg_usage_by_notif = data.groupby("Frequency of Checking Notifications")["Daily Social Media Usage(hours)"].mean().reset_index()
-        fig9 = px.bar(avg_usage_by_notif, x="Frequency of Checking Notifications", y="Daily Social Media Usage(hours)")
+
+        fig9 = px.bar(
+            avg_usage_by_notif,
+            x="Frequency of Checking Notifications",
+            y="Daily Social Media Usage(hours)",
+
+            category_orders={
+                "Frequency of Checking Notifications": ["Rarely", "Occasionally", "Frequently"]
+            }
+        )
+
+
         st.plotly_chart(fig9, use_container_width=True, key="staticd1f9")
         st.info(
             "💡 Frequency of checking notifications also doesn't have a huge affect on daily usage. ")
@@ -402,7 +423,8 @@ if show_dataset == "Dataset 1":
         )
 
         st.plotly_chart(fig4, use_container_width=True, key="avg_daily_usage_bar")
-        st.info("💡 On average, females report slightly higher daily social media usage compared to males and others.")
+        st.info("💡 Daily social media usage is fairly consistent across genders, with no significant differences observed.")
+
 
         # Figure 5: Anxiety Score by Gender
         st.markdown("### 📦 Anxiety Score by Gender")
@@ -434,7 +456,7 @@ if show_dataset == "Dataset 1":
             y="Self Reported Addiction Score",
             color="Gender",
             size="Anxiety Score",
-            hover_data=["Self Esteem Score", "Sleep Quality"]
+            hover_data=["Gender","Self Esteem Score", "Sleep Quality"]
         )
 
         fig6.update_layout(
@@ -470,7 +492,7 @@ if show_dataset == "Dataset 1":
         st.plotly_chart(fig7, use_container_width=True, key="mental_health_bar")
 
         st.info(
-            "💡 Most participants report either poor or fair mental health status, with fewer reporting good or excellent mental health.")
+            "💡 Most participants report poor mental health status, with fewer reporting excellent mental health.")
 
         # Figure 8: Daily Usage vs. Average Anxiety Score
         st.markdown("### 🔁 Daily Usage vs. Average Anxiety Score")
@@ -541,7 +563,7 @@ if show_dataset == "Dataset 1":
 
         st.plotly_chart(fig10, use_container_width=True, key="age_selfesteem_anxiety_line")
 
-        st.info("💡 Negative Correlation: The lower the anxiety score, the higher the self-esteem score.")
+        st.info("💡 Anxiety peaks around age 30, while self-esteem is at its lowest point. This suggests that early adulthood may be a more mentally stressful period.")
 
         # Figure 11: Avg Social Media Fatigue by Usage Hours
         st.markdown("### 📈 Average Social Media Fatigue by Usage Hours")
