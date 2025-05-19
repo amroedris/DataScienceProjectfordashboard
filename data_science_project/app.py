@@ -1,15 +1,17 @@
-# app.py
-import streamlit as st
-import pandas as pd
-import plotly.express as px
-
-#choose the data set
-
-st.set_page_config(layout="wide")
-st.sidebar.title("📂 Dataset Selection")
-dataset_option = st.sidebar.selectbox("Choose a dataset:", ["Dataset 1: master-5.csv", "Dataset 2: addiction.csv"])
+# Libraries needed
+import streamlit as st  #for web app
+import pandas as pd     #for data manipulation
+import plotly.express as px  #for data visualization
 
 
+
+#1. choose the data set
+
+st.set_page_config(layout="wide") # tells Streamlit to use the full browser width instead of the default narrow column
+st.sidebar.title("📂 Dataset Selection") # title to allow the users understand whichh dataset they are choosing
+dataset_option = st.sidebar.selectbox("Choose a dataset:", ["Dataset 1: master-5.csv", "Dataset 2: addiction.csv"]) # dropdown menu to choose between two datasets
+
+#2. load the data set
 if dataset_option == "Dataset 1: master-5.csv":
     # Load data
     data = pd.read_csv("master-5 2.csv")
@@ -22,23 +24,28 @@ else:
     dataset_type = "addiction-focused behavioral data"
     show_dataset = "Dataset 2"
 
-
+#3. show which data set is being displayed
 st.markdown(f"### 📊 Visualizing {show_dataset}")
 st.markdown(f"**Source**: `{dataset_name}`  ")
 st.markdown(f"**Description**: {dataset_type}")
 
+
+
+#4. Choose the visualization mode
 st.sidebar.title("📊 Visualization Mode")
 viz_mode = st.sidebar.radio("Select visualization type:", ["Static Visualizations", "Interactive Dashboard"])
 
-
+#5. Show the dataset
 st.title("📱 Social Media & Smartphone Addiction Dashboard")
-if show_dataset == "Dataset 1":
+if show_dataset == "Dataset 1": #if user has chosen dataset 1
 
-    if viz_mode == "Static Visualizations":
+    if viz_mode == "Static Visualizations": #AND user has chosen static visualizations
         st.markdown("#### Static Plots for Dataset 1")
 
 
         # Static plots for Dataset 1
+
+        # Figure 0: Addiction Score Distribution
         st.markdown("### 📈 Addiction Score Distribution")
         fig0 = px.histogram(
             data,
@@ -46,13 +53,18 @@ if show_dataset == "Dataset 1":
             nbins=10
         )
 
+        fig0.update_layout(
+            height=600
+        )
+
 
         st.plotly_chart(fig0, use_container_width=True, key="staticd1f0")
 
         st.info(
             "💡 Most participants think they are addicted to their smartphones.")
+        
 
-
+        # Figure 1: Average Addiction Score vs Age
         st.markdown("### 📈 Avg Addiction Score vs Age ")
 
 
@@ -64,21 +76,30 @@ if show_dataset == "Dataset 1":
             nbins=10
         )
 
+        fig1.update_layout(
+            height=600
+        )
+
 
         st.plotly_chart(fig1, use_container_width=True, key="staticd1f1")
         st.info(
             "💡 Most ages have high average addiction scores circling around 8.3 to 8.6.")
 
 
-
+        # Figure 2: Addiction Score vs Average Sleep Quality
         st.markdown("### 📈 Addiction Score vs Avg Sleep Quality ")
 
-        avg_sleep_quality = data.groupby("Self Reported Addiction Score")["Sleep Quality"].mean().reset_index()
+        # Calculate the average sleep quality for each addiction score
+        avg_sleep_quality = data.groupby("Self Reported Addiction Score")["Sleep Quality"].mean().reset_index() # We use reset_index() to turn the grouped result into a DataFrame with proper columns instead of using the group values as an index
 
         fig2 = px.scatter(
             avg_sleep_quality,
             x="Self Reported Addiction Score",
             y="Sleep Quality"
+        )
+
+        fig2.update_layout(
+            height=600
         )
 
 
@@ -87,14 +108,20 @@ if show_dataset == "Dataset 1":
             "💡 Average Sleep quality decreased as addiction score increase, then stabilizes")
 
 
+
+        # Figure 3: Addiction Score vs Average Anxiety Score
         st.markdown("### 📈 Addiction Score vs Avg Anxiety Score ")
-
+        # Calculate the average anxiety score for each addiction score
         avg_anx_quality = data.groupby("Self Reported Addiction Score")["Anxiety Score"].mean().reset_index()
-
+        # We use reset_index() to turn the grouped result into a DataFrame with proper columns instead of using the group values as an index
         fig3 = px.line(
             avg_anx_quality,
             x="Self Reported Addiction Score",
             y="Anxiety Score"
+        )
+
+        fig3.update_layout(
+            height=600
         )
 
 
@@ -102,9 +129,9 @@ if show_dataset == "Dataset 1":
         st.info(
             "💡 As the addiction score rises, the anxiety score rises. Positive correlation")
 
-
+        # Figure 4: Addiction Score vs Average Self-Esteem Score
         st.markdown("### 📈 Addiction Score vs Avg Self-Esteem Score ")
-
+        # Calculate the average self-esteem score for each addiction score
         avg_selfesteem_quality = data.groupby("Self Reported Addiction Score")["Self Esteem Score"].mean().reset_index()
 
         fig4 = px.line(
@@ -113,21 +140,29 @@ if show_dataset == "Dataset 1":
             y="Self Esteem Score"
         )
 
+        fig4.update_layout(
+            height=600
+        )
+
         st.plotly_chart(fig4, use_container_width=True, key="staticd1f4")
         st.info(
             "💡 As the addiction score increases, the anxiety score decreases. Negative correlation")
 
 
-
+        # Figure 5: Average Addiction Score vs Mental Health Status
         st.markdown("### 📈Avg Addiction Score vs  Mental Health Status ")
 
         avg_add_mental_health = data.groupby("Mental Health Status")["Self Reported Addiction Score"].mean().reset_index()
 
-        fig5 = px.bar(
+        fig5 = px.bar(  
             avg_add_mental_health,
             x="Mental Health Status",
             y="Self Reported Addiction Score",
-            category_orders=["Poor", "Fair", "Good", "Excellent"]
+            category_orders=["Poor", "Fair", "Good", "Excellent"] 
+        )
+
+        fig5.update_layout(
+            height=600
         )
 
         st.plotly_chart(fig5, use_container_width=True, key="staticd1f5")
@@ -135,15 +170,19 @@ if show_dataset == "Dataset 1":
             "💡 People will high addiction scores tend to have poor mental health status. ")
 
 
-
+        # Figure 6: Daily Usage vs Average Addiction Score
         st.markdown("### 📈 Daily Usage vs Avg Addiction Score ")
-
+        # Calculate the average addiction score for each daily usage
         avg_addiction_by_usage = data.groupby("Daily Social Media Usage(hours)")["Self Reported Addiction Score"].mean().reset_index()
 
         fig6 = px.line(
             avg_addiction_by_usage,
             x="Daily Social Media Usage(hours)",
             y="Self Reported Addiction Score"
+        )   
+
+        fig6.update_layout(
+            height=600
         )
 
         st.plotly_chart(fig6, use_container_width=True, key="staticd1f6")
@@ -153,7 +192,7 @@ if show_dataset == "Dataset 1":
 
 
 
-
+        # Figure 7: Platforms vs Daily Usage
         st.markdown("### 📈 Platforms vs Daily Usage")
 
 
@@ -165,7 +204,12 @@ if show_dataset == "Dataset 1":
             histfunc="avg"
         )
 
-        fig7.update_traces(marker_line_color="black", marker_line_width=1)
+        fig7.update_traces(marker_line_color="black", marker_line_width=1) # adds a black border to the bars
+
+        fig7.update_layout(
+            height=600
+        )
+        
 
 
         st.plotly_chart(fig7, use_container_width=True, key="staticd1f7")
@@ -175,7 +219,7 @@ if show_dataset == "Dataset 1":
 
 
 
-
+        # Figure 8: Frequency of Posts vs Daily Usage
         st.markdown("### 📈 Frequency of Posts vs Daily Usage")
         avg_usage_by_posts = data.groupby("Frequency of Posts")["Daily Social Media Usage(hours)"].mean().reset_index()
 
@@ -184,16 +228,24 @@ if show_dataset == "Dataset 1":
             x="Frequency of Posts",
             y="Daily Social Media Usage(hours)",
             category_orders={
-                "Frequency of Posts": ["Never", "Rarely", "Sometimes", "Often", "Always"]
+                "Frequency of Posts": ["Never", "Rarely", "Sometimes", "Often", "Always"] # orders the x-axis categories
             }
         )
+
+        fig8.update_layout(
+            height=600
+        )
+
+
         st.plotly_chart(fig8, use_container_width=True, key="staticd1f8")
 
         st.info(
             "💡 Frequency of posts doesn't have a significant affect on daily usage. ")
 
-        st.markdown("### 📈 Notification Frequency vs Daily Usage")
 
+        # Figure 9: Frequency of Checking Notifications vs Daily Usage
+        st.markdown("### 📈 Notification Frequency vs Daily Usage")
+        # Calculate the average daily usage for each frequency of checking notifications
         avg_usage_by_notif = data.groupby("Frequency of Checking Notifications")["Daily Social Media Usage(hours)"].mean().reset_index()
 
         fig9 = px.bar(
@@ -202,8 +254,12 @@ if show_dataset == "Dataset 1":
             y="Daily Social Media Usage(hours)",
 
             category_orders={
-                "Frequency of Checking Notifications": ["Rarely", "Occasionally", "Frequently"]
+                "Frequency of Checking Notifications": ["Rarely", "Occasionally", "Frequently"] # orders the x-axis categories
             }
+        )
+
+        fig9.update_layout(
+            height=600
         )
 
 
@@ -213,13 +269,13 @@ if show_dataset == "Dataset 1":
 
 
 
+        #END OF STATIC PLOTS FOR DATASET 1
 
 
 
 
-
-
-    elif viz_mode == "Interactive Dashboard":
+    # Interactive Dashboard for Dataset 1
+    elif viz_mode == "Interactive Dashboard": 
         st.markdown("#### Interactive Dashboard for Dataset 1")
         # Displays the dashboard title at the top.
 
@@ -656,11 +712,17 @@ if show_dataset == "Dataset 1":
         st.info("💡 Positive correlation: Higher addiction scores are associated with increased social media fatigue.")
 
 
-elif show_dataset == "Dataset 2":
-    if viz_mode == "Static Visualizations":
+        #END OF Dataset1 Interactive Dashboard
+
+
+elif show_dataset == "Dataset 2": # if user has chosen dataset 2
+    if viz_mode == "Static Visualizations": # AND user has chosen static visualizations
         st.markdown("#### Static Plots for Dataset 2")
         # Static plots for Dataset 2
 
+
+
+        # Figure 0: Addiction Status Distribution
         st.markdown("### 📈 Addiction Distribution")
 
         addicted_dist = data["addicted"].value_counts().reset_index()
@@ -669,12 +731,18 @@ elif show_dataset == "Dataset 2":
             names="addicted",
             values="count"
         )
+
+        fig0.update_layout(
+            height=600
+        )
+
+
         st.plotly_chart(fig0, use_container_width=True, key="staticd2f0")
         st.info(
             "💡 Around 50.4% of people are addicted to social media")
 
 
-
+        # Figure 1: Avg Daily Usage by Addiction Status
         st.markdown("### 📈 Addiction Status by Daily Usage")
 
         fig1 = px.box(
@@ -685,20 +753,31 @@ elif show_dataset == "Dataset 2":
             color_discrete_map={"Yes": "#1f77b4", "No": "#AED6F1"},
             labels={"daily_screen_time": "Daily Screen Time (hours)", "addicted": "Addiction Status"}
         )
+
+        fig1.update_layout(
+            height=600
+        )
+
         st.plotly_chart(fig1, use_container_width=True, key="staticd2f1")
         st.info(
             "💡 Addicted people tend to use the phone more often")
 
 
-
+        # Figure 2: Avg Daily Usage by Age
         st.markdown("### 📈 Avg Daily Usage by Age")
 
         fig2 = px.histogram(data, x = "age", y = "daily_screen_time", nbins= 10, histfunc= "avg")
+
+        fig2.update_layout(
+            height=600
+        )
         st.plotly_chart(fig2, use_container_width=True, key="staticd2f2")
 
         st.info(
             "💡 Teenagers have the most screen time averaging at around 4.5 hours per day")
 
+
+        # Figure 3: Addiction Status by Night Usage
         st.markdown("### 📈 Addiction Status by Night Usage")
 
         fig3 = px.box(
@@ -709,11 +788,17 @@ elif show_dataset == "Dataset 2":
             color_discrete_map={"Yes": "#1f77b4", "No": "#AED6F1"},
             labels={"night_usage": "Night Usage (hours)", "addicted": "Addiction Status"}
         )
+
+        fig3.update_layout(
+            height=600
+        )
         st.plotly_chart(fig3, use_container_width=True, key="staticd2f3")
         st.info(
             "💡 Users classified as addicted tend to spend more time on their phones after bedtime."
         )
 
+
+        # Figure 4: Addiction Status by App Sessions
         st.markdown("### 📈 Addiction Status by App Sessions")
 
         fig4 = px.box(
@@ -724,11 +809,18 @@ elif show_dataset == "Dataset 2":
             color_discrete_map={"Yes": "#1f77b4", "No": "#AED6F1"},
             labels={"app_sessions": "App Sessions", "addicted": "Addiction Status"}
         )
+
+        fig4.update_layout(
+            height=600
+        )
         st.plotly_chart(fig4, use_container_width=True, key="staticd2f4")
         st.info(
             "💡 Addicted users typically open apps more frequently throughout the day."
         )
 
+
+
+        # Figure 5: Work/Study Hours by Addiction Status
         st.markdown("### 📈 Work/Study Hours by Addiction Status")
 
         fig5 = px.box(
@@ -739,6 +831,10 @@ elif show_dataset == "Dataset 2":
             color_discrete_map={"Yes": "#1f77b4", "No": "#AED6F1"},
             labels={"work_study_hours": "Work/Study Hours", "addicted": "Addiction Status"}
         )
+
+        fig5.update_layout(
+            height=600
+        )
         st.plotly_chart(fig5, use_container_width=True, key="staticd2f5")
         st.info(
             "💡 Addicted individuals tend to spend slightly fewer hours on work or study tasks compared to non-addicted individuals."
@@ -746,7 +842,10 @@ elif show_dataset == "Dataset 2":
 
 
 
+        #END OF STATIC PLOTS FOR DATASET 2
 
+
+    # Interactive Dashboard for Dataset 2
     elif viz_mode == "Interactive Dashboard":
         st.markdown("#### Interactive Dashboard for Dataset 2")
         # Displays the dashboard title at the top.
@@ -778,12 +877,13 @@ elif show_dataset == "Dataset 2":
         # Get the unique values in the "addicted" column
         addiction_options2 = data["addicted"].dropna().unique().tolist()
 
+        # Create a multiselect filter for addiction status
         addiction_filter2 = st.sidebar.multiselect(
             "Addiction Status",
             options=["All"] + addiction_options2,
             default=["All"]
         )
-
+        # If "All" is selected with something else, remove it from the filter list.
         if "All" in addiction_filter2 and len(addiction_filter2) > 1:
             addiction_filter2.remove("All")
 
@@ -825,6 +925,9 @@ elif show_dataset == "Dataset 2":
         st.info(
             "💡 Just over half of the participants (50.4%) are classified as addicted, highlighting how widespread smartphone dependency has become.")
 
+
+
+        # Figure 1: Avg Screen Time by Addiction
         st.markdown("### 📊 Avg Screen Time by Addiction")
 
         avg_screen = data.groupby("addicted")["daily_screen_time"].mean().reset_index()
@@ -832,24 +935,40 @@ elif show_dataset == "Dataset 2":
                       color="addicted",
                       color_discrete_map={"Yes": "#1f77b4", "No": "#AED6F1"},
                       labels={"daily_screen_time": "Average Screen Time (hrs)", "addicted": "Addiction Status"},
-                      text_auto=".2f")
+                      text_auto=".2f"
+                      )
+        
+        fig1.update_layout(
+            height=600
+        )
         st.plotly_chart(fig1, use_container_width=True)
 
         st.info(
             "💡 Average screen time is drastically more for addicted individuals (4.5 hours) compared to non-addicted individuals (3 hours).")
 
+
+
+        # Figure 2: Average Stress Level vs Night Usage
         st.markdown("### 🌙 Avg Stress Level vs Night Usage")
 
         avg_sleep = data.groupby("night_usage")["stress_level"].mean().reset_index()
         fig2 = px.scatter(avg_sleep, x="night_usage", y="stress_level",
                           color="stress_level", opacity=0.7,
                           color_discrete_map={"Yes": "#1f77b4", "No": "#AED6F1"},
-                          labels={"night_usage": "Night Usage (hrs)", "stress_level": "Stress Level"})
+                          labels={"night_usage": "Night Usage (hrs)", "stress_level": "Stress Level"}
+                          )
+        
+        fig2.update_layout(
+            height=600
+        )
         st.plotly_chart(fig2, use_container_width=True)
 
         st.info(
             "💡 Clear positive correlation: when night usage increases, stress level increases.")
 
+
+
+        # Figure 3: Gaming Time by Addiction Status
         st.markdown("### 🎮 Gaming Time by Addiction Status")
 
         fig3 = px.bar(data.groupby("addicted")["gaming_time"].mean().reset_index(),
@@ -857,12 +976,20 @@ elif show_dataset == "Dataset 2":
                       color="addicted",
                       color_discrete_map={"Yes": "#1f77b4", "No": "#AED6F1"},
                       labels={"gaming_time": "Avg Gaming Time (hrs)", "addicted": "Addiction Status"},
-                      text_auto=".2f")
+                      text_auto=".2f"
+                      )
+        
+        fig3.update_layout(
+            height=600
+        )
         st.plotly_chart(fig3, use_container_width=True)
 
         st.info(
             "💡 Addicted individuals tend to game more than non-addicted individuals.")
 
+
+
+        # Figure 4: Notifications vs Average Stress Level
         st.markdown("### 🔔 Notifications vs Avg Stress Level")
 
         avg_noti = data.groupby("notifications")["stress_level"].mean().reset_index()
@@ -870,44 +997,70 @@ elif show_dataset == "Dataset 2":
                           color="stress_level", opacity=0.7,
                           color_discrete_map={"Yes": "#1f77b4", "No": "#AED6F1"},
                           labels={"notifications": "Notifications (per day)", "stress_level": "Stress Level"})
+        
+        fig4.update_layout(
+            height=600
+        )
         st.plotly_chart(fig4, use_container_width=True)
 
         st.info(
             "💡 Stress level elevates with the increase of notifications (per day)")
 
 
-
+        #Figure 5: Age vs Daily Screen time
         st.markdown("### 👤 Age vs Daily Screen Time")
 
         avg_screen_age = data.groupby("age")["daily_screen_time"].mean().reset_index()
         fig5 = px.line(avg_screen_age, x="age", y="daily_screen_time",
                        labels={"daily_screen_time": "Avg Screen Time (hrs)", "age": "Age"})
+        
+        fig5.update_layout(
+            height=600
+        )
         st.plotly_chart(fig5, use_container_width=True)
 
         st.info(
             "💡 As people get older, they tend to use their phones less. ")
 
 
+
+        # Figure 6: Work and study hours by addiction status
         st.markdown("### 📚 Work/Study Hours by Addiction Status")
 
         fig6 = px.box(data, x="addicted", y="work_study_hours", color="addicted",
                       color_discrete_map={"Yes": "#1f77b4", "No": "#AED6F1"},
                       labels={"work_study_hours": "Work/Study Hours", "addicted": "Addiction Status"})
+        
+        fig6.update_layout(
+            height=600
+        )
+
         st.plotly_chart(fig6, use_container_width=True)
 
         st.info(
             "💡 Non-addicted individuals tend to spend more time on work/study tasks compared to addicted individuals.")
 
+
+        # Figure 7: Average Stress levels vs App sessions
         st.markdown("### 📱 Avg Stress Level vs App Sessions")
         avg_app_sess = data.groupby("app_sessions")["stress_level"].mean().reset_index()
         fig7 = px.scatter(data, x="app_sessions", y="stress_level",
                           color="stress_level", opacity=0.7,
                           color_discrete_map={"Yes": "#1f77b4", "No": "#AED6F1"},
                           labels={"app_sessions": "App Sessions", "stress_level": "Stress Level"})
+        
+        fig7.update_layout(
+            height=600
+        )
+
+
         st.plotly_chart(fig7, use_container_width=True)
 
         st.info(
             "💡 More app sessions lead to higher stress levels. ")
+        
+        #END OF DATASET 2 INTERACTIVE DASHBOARD
 
 
 
+#END OF THE CODE.
